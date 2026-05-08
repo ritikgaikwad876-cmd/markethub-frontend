@@ -11,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const successMessage = location.state?.resetSuccess || '';
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -57,6 +58,13 @@ const Login = () => {
       </form>
 
       {error && <p className="status-msg error">{error}</p>}
+      {successMessage ? <p className="status-msg">{successMessage}</p> : null}
+
+      <div className="auth-secondary-actions auth-secondary-actions-compact">
+        <Link to="/forgot-password" className="auth-inline-link">
+          Forgot Password?
+        </Link>
+      </div>
 
       <p className="auth-switch">
         Don't have an account? <Link to="/register">Register</Link>

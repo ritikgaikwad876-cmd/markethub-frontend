@@ -8,6 +8,9 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import AdminLogin from './pages/AdminLogin';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import VerifyResetOtp from './pages/VerifyResetOtp';
+import ResetPassword from './pages/ResetPassword';
 import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrderSuccess';
 import AdminDashboard from './pages/AdminDashboard';
@@ -16,10 +19,13 @@ import RequireAuth from './components/RequireAuth';
 import AdminRoute from './components/AdminRoute';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { useTheme } from './context/ThemeContext';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const { isDarkMode } = useTheme();
+
   return (
     <div className="app-shell">
       <Navbar />
@@ -32,6 +38,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-reset-otp" element={<VerifyResetOtp />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route
             path="/cart"
@@ -77,7 +86,14 @@ function App() {
       </main>
 
       <Footer />
-      <ToastContainer position="bottom-right" autoClose={2500} hideProgressBar closeOnClick pauseOnHover theme="light" />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2500}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        theme={isDarkMode ? 'dark' : 'light'}
+      />
     </div>
   );
 }

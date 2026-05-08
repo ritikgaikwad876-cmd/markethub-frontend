@@ -106,17 +106,17 @@ const Product = () => {
       </h2>
 
       {searchQuery ? (
-        <p className="product-category" style={{ marginBottom: '1rem' }}>
+        <p className="product-category product-search-label">
           Search: {searchQuery}
         </p>
       ) : null}
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+      <div className="product-sort-row">
         <select
           value={sortOrder}
           onChange={(event) => setSortOrder(event.target.value)}
           className="summary-select"
-          style={{ width: '220px', marginBottom: 0 }}
+          id="product-sort-order"
         >
           <option value="">Sort by Price</option>
           <option value="low-to-high">Low to High</option>

@@ -19,6 +19,7 @@ import {
 } from '../api/productApi';
 import { fetchAllOrders } from '../api/orderApi';
 import { fetchAllUsers } from '../api/userApi';
+import { useTheme } from '../context/ThemeContext';
 
 
 const initialForm = {
@@ -34,6 +35,7 @@ const initialForm = {
 const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
 
 const AdminDashboard = () => {
+  const { isDarkMode } = useTheme();
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState({
@@ -154,6 +156,19 @@ const AdminDashboard = () => {
 
     return searchedProducts;
   }, [products, productSearch, productSort]);
+
+  const chartTheme = useMemo(
+    () => ({
+      grid: isDarkMode ? '#334155' : '#dbe6dd',
+      axis: isDarkMode ? '#cbd5e1' : '#475569',
+      tooltipBackground: isDarkMode ? '#111827' : '#ffffff',
+      tooltipBorder: isDarkMode ? '#334155' : '#dbe6dd',
+      tooltipText: isDarkMode ? '#e2e8f0' : '#0f172a',
+      shadow: isDarkMode ? '0 18px 34px rgba(2, 6, 23, 0.45)' : '0 10px 24px rgba(15, 23, 42, 0.08)',
+      bar: '#0f7a42',
+    }),
+    [isDarkMode]
+  );
 
   useEffect(() => {
     loadDashboardData();
@@ -341,18 +356,22 @@ const AdminDashboard = () => {
           <div className="admin-chart-wrap">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={orderChartData} margin={{ top: 10, right: 16, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#dbe6dd" />
-                <XAxis dataKey="orderId" tick={{ fill: '#475569', fontSize: 12 }} />
-                <YAxis tick={{ fill: '#475569', fontSize: 12 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.grid} />
+                <XAxis dataKey="orderId" tick={{ fill: chartTheme.axis, fontSize: 12 }} />
+                <YAxis tick={{ fill: chartTheme.axis, fontSize: 12 }} />
                 <Tooltip
                   formatter={(value) => formatCurrency(value)}
+                  labelStyle={{ color: chartTheme.tooltipText }}
+                  itemStyle={{ color: chartTheme.tooltipText }}
                   contentStyle={{
                     borderRadius: '12px',
-                    border: '1px solid #dbe6dd',
-                    boxShadow: '0 10px 24px rgba(15, 23, 42, 0.08)',
+                    border: `1px solid ${chartTheme.tooltipBorder}`,
+                    backgroundColor: chartTheme.tooltipBackground,
+                    color: chartTheme.tooltipText,
+                    boxShadow: chartTheme.shadow,
                   }}
                 />
-                <Bar dataKey="totalPrice" fill="#0f7a42" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="totalPrice" fill={chartTheme.bar} radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

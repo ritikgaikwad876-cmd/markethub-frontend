@@ -34,12 +34,11 @@ const ProductCard = ({ product, adding, onAddToCart }) => {
           onError={(event) => {
             event.target.src = 'https://via.placeholder.com/300';
           }}
-          style={{ cursor: 'pointer' }}
         />
 
         <span className="price-badge">{formatPrice(effectivePrice)}</span>
         {hasDiscount ? (
-          <span className="stock-chip" style={{ top: '10px', left: '10px', bottom: 'auto', background: 'rgba(185, 28, 28, 0.92)' }}>
+          <span className="stock-chip discount-chip">
             {discountPercent}% OFF
           </span>
         ) : null}
@@ -53,7 +52,7 @@ const ProductCard = ({ product, adding, onAddToCart }) => {
         <p className="product-price">
           {formatPrice(effectivePrice)}
           {hasDiscount ? (
-            <span style={{ marginLeft: '8px', color: '#94a3b8', fontSize: '0.85rem', textDecoration: 'line-through' }}>
+            <span className="product-price-original">
               {formatPrice(originalPrice)}
             </span>
           ) : null}

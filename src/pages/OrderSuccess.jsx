@@ -14,14 +14,14 @@ const OrderSuccess = () => {
   const order = location.state?.order || null;
 
   return (
-    <section className="auth-card" style={{ maxWidth: '720px' }}>
+    <section className="auth-card order-success-card">
       <p className="hero-badge admin-badge">Order Confirmed</p>
       <h2 className="section-title">Your order was placed successfully</h2>
       <p className="details-description">
         We have received your order and started processing it. You can track the full details from your orders page.
       </p>
 
-      <div className="order-card" style={{ marginTop: '1rem' }}>
+      <div className="order-card order-success-summary">
         <div className="order-head">
           <h3>
             Order {order?._id ? `#${order._id.slice(-6).toUpperCase()}` : 'Summary'}
