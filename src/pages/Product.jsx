@@ -127,7 +127,7 @@ const Product = () => {
       {sortedProducts.length === 0 ? (
         <p className="status-msg">No products found.</p>
       ) : (
-        <div className="product-grid">
+        <div className="product-grid featured-product-grid">
           {sortedProducts.map((item) => (
             <ProductCard
               key={item._id}

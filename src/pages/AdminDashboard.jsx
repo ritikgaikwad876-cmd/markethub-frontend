@@ -228,7 +228,10 @@ const AdminDashboard = () => {
     setEditingId(product._id);
     setError('');
     setSuccess('');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('admin-product-form')?.scrollIntoView({
+  behavior: 'smooth',
+  block: 'start',
+});
   };
 
   const handleDelete = async (productId) => {
@@ -446,7 +449,7 @@ const AdminDashboard = () => {
         </section>
       </div>
 
-      <div className="admin-layout">
+      <div className="admin-layout admin-dashboard-layout">
         <section className="admin-panel">
           <h3>{editingId ? 'Edit Product' : 'Add Product'}</h3>
 
@@ -537,7 +540,7 @@ const AdminDashboard = () => {
           </form>
         </section>
 
-        <section className="admin-panel">
+        <section className="admin-panel admin-product-list-panel">
           <div className="admin-list-header">
             <h3>Product List</h3>
             <span>{filteredProducts.length} of {products.length} items</span>
@@ -578,7 +581,7 @@ const AdminDashboard = () => {
               const isLowStock = stockCount < 20;
 
               return (
-                <article key={product._id} className="admin-product-item">
+                <article key={product._id} className="admin-product-item admin-product-card">
                   <img
                     src={product.image || 'https://via.placeholder.com/120x90?text=Product'}
                     alt={product.name}

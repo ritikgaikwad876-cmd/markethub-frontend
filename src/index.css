@@ -14,3 +14,143 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.featured-product-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.product-card {
+  height: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+.admin-dashboard-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.admin-product-form {
+  position: sticky;
+  top: 90px;
+}
+
+.admin-product-list-panel {
+  max-height: calc(100vh - 120px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-product-list {
+  max-height: calc(100vh - 240px);
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.admin-product-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-product-list::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.18);
+  border-radius: 999px;
+}
+
+.admin-product-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+  padding: 16px 18px;
+
+  border-radius: 16px;
+  min-height: 110px;
+}
+
+.admin-product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.admin-product-thumb {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.admin-product-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-product-meta {
+  flex: 1;
+}
+
+.admin-product-meta h4 {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+}
+
+.admin-product-meta p {
+  margin: 4px 0;
+}
+
+.admin-product-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.admin-product-actions button {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .admin-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-product-form {
+    position: static;
+  }
+
+  .admin-product-list-panel,
+  .admin-product-list {
+    max-height: none;
+  }
+
+  .admin-product-card,
+  .admin-product-item,
+  .admin-product-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-product-actions {
+    width: 100%;
+    flex-direction: row;
+  }
+}
