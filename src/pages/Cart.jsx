@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createRazorpayOrder, placeOrder, verifyRazorpayPayment } from '../api/orderApi';
 import { useCart } from '../context/CartContext';
+import { getProductUnit } from '../productUnit';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -200,6 +201,7 @@ const Cart = () => {
             {cart.items.map((item) => {
               const product = item.product || {};
               const productId = product._id || item.product;
+              const productUnit = getProductUnit(product);
 
               return (
                 <article key={productId} className="cart-item">
@@ -211,6 +213,7 @@ const Cart = () => {
 
                   <div className="cart-item-info">
                     <h3>{product.name || 'Product item'}</h3>
+                    {productUnit ? <p className="product-size-inline cart-item-size">{productUnit}</p> : null}
                     <p className="product-category">Rs. {item.priceSnapshot} each</p>
                     <div className="qty-controls">
                       <button type="button" onClick={() => handleDecrease(productId, item.quantity)}>-</button>

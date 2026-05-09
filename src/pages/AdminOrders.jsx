@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { fetchAllOrders, updateOrderStatus } from '../api/orderApi';
+import OrderStatusBadge from '../components/OrderStatusBadge';
+import OrderTimeline from '../components/OrderTimeline';
+import { ORDER_STATUS_FLOW } from '../orderStatus';
+import { getProductUnit } from '../productUnit';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -56,6 +60,7 @@ const AdminOrders = () => {
       const updatedOrder = response.order || response.data || response;
 
       setOrders((prev) => prev.map((order) => (order._id === orderId ? updatedOrder : order)));
+      setSelectedOrder((prev) => (prev && prev._id === orderId ? updatedOrder : prev));
       setSuccess('Order status updated successfully.');
       toast.success('Order status updated successfully');
     } catch (err) {
@@ -116,6 +121,20 @@ const AdminOrders = () => {
           </button>
           <button
             type="button"
+            className={statusFilter === 'processing' ? 'btn-primary' : 'btn-secondary'}
+            onClick={() => setStatusFilter('processing')}
+          >
+            Processing
+          </button>
+          <button
+            type="button"
+            className={statusFilter === 'shipped' ? 'btn-primary' : 'btn-secondary'}
+            onClick={() => setStatusFilter('shipped')}
+          >
+            Shipped
+          </button>
+          <button
+            type="button"
             className={statusFilter === 'delivered' ? 'btn-primary' : 'btn-secondary'}
             onClick={() => setStatusFilter('delivered')}
           >
@@ -147,17 +166,27 @@ const AdminOrders = () => {
               }}
             >
               <div className="admin-order-meta">
-                <h4>Order #{order._id.slice(-6).toUpperCase()}</h4>
+                <div className="admin-order-topline">
+                  <h4>Order #{order._id.slice(-6).toUpperCase()}</h4>
+                  <OrderStatusBadge status={order.status} />
+                </div>
                 <p>User: {order.user?.name || order.shippingDetails?.name || 'Customer'}</p>
                 <p>Price: Rs. {Number(order.totalAmount || 0).toFixed(2)}</p>
-                <p>Status: {order.status || 'pending'}</p>
                 <p>Placed on: {new Date(order.createdAt).toLocaleString()}</p>
+
+                <OrderTimeline status={order.status} />
 
                 {Array.isArray(order.items) && order.items.length > 0 ? (
                   <ul className="order-items">
                     {order.items.map((item, index) => (
                       <li key={`${order._id}-${index}`}>
-                        {(item.product && item.product.name) || 'Product'} x {item.quantity} - Rs. {item.price * item.quantity}
+                        <span className="order-item-name">
+                          {(item.product && item.product.name) || 'Product'}
+                        </span>
+                        {getProductUnit(item) ? (
+                          <span className="product-size-inline order-item-size">{getProductUnit(item)}</span>
+                        ) : null}
+                        {' '}x {item.quantity} - Rs. {item.price * item.quantity}
                       </li>
                     ))}
                   </ul>
@@ -170,8 +199,11 @@ const AdminOrders = () => {
                   onChange={(event) => handleOrderStatusChange(order._id, event.target.value)}
                   className="summary-select"
                 >
-                  <option value="pending">Pending</option>
-                  <option value="delivered">Delivered</option>
+                  {ORDER_STATUS_FLOW.map((status) => (
+                    <option key={status} value={status}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </option>
+                  ))}
                 </select>
 
                 <button
@@ -214,8 +246,12 @@ const AdminOrders = () => {
                 <strong>Total Price:</strong> Rs. {Number(selectedOrder.totalPrice ?? selectedOrder.totalAmount ?? 0).toFixed(2)}
               </p>
               <p>
-                <strong>Status:</strong> {selectedOrder.status || 'pending'}
+                <strong>Status:</strong> <OrderStatusBadge status={selectedOrder.status} />
               </p>
+
+              <div>
+                <OrderTimeline status={selectedOrder.status} />
+              </div>
 
               <div>
                 <h4>Order Items</h4>
@@ -223,7 +259,12 @@ const AdminOrders = () => {
                   <ul className="admin-modal-items">
                     {selectedOrder.items.map((item, index) => (
                       <li key={`${selectedOrder._id}-modal-${index}`}>
-                        <span>{item.product?.name || 'Product'}</span>
+                        <span>
+                          {item.product?.name || 'Product'}
+                          {getProductUnit(item) ? (
+                            <span className="product-size-inline order-item-size">{getProductUnit(item)}</span>
+                          ) : null}
+                        </span>
                         <strong>Qty: {item.quantity}</strong>
                       </li>
                     ))}

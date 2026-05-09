@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getProductUnit } from '../productUnit';
 
 const ProductCard = ({ product, adding, onAddToCart }) => {
   const navigate = useNavigate();
+  const productUnit = getProductUnit(product);
   const stock = Number(product.stock ?? 0);
   const originalPrice = Number(product.price ?? 0);
   const discountedPrice = Number(product.discountPrice ?? 0);
@@ -51,6 +53,7 @@ const ProductCard = ({ product, adding, onAddToCart }) => {
         <p className="product-description">{product.description}</p>
         <p className="product-price">
           {formatPrice(effectivePrice)}
+          {productUnit ? <span className="product-price-unit"> | {productUnit}</span> : null}
           {hasDiscount ? (
             <span className="product-price-original">
               {formatPrice(originalPrice)}

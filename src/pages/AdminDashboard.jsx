@@ -19,7 +19,9 @@ import {
 } from '../api/productApi';
 import { fetchAllOrders } from '../api/orderApi';
 import { fetchAllUsers } from '../api/userApi';
+import OrderStatusBadge from '../components/OrderStatusBadge';
 import { useTheme } from '../context/ThemeContext';
+import { getProductUnit } from '../productUnit';
 
 
 const initialForm = {
@@ -28,6 +30,7 @@ const initialForm = {
   price: '',
   discountPrice: '',
   category: 'vegetables',
+  size: '',
   image: '',
   stock: '',
 };
@@ -218,6 +221,7 @@ const AdminDashboard = () => {
       price: String(product.price ?? ''),
       discountPrice: String(product.discountPrice ?? ''),
       category: product.category || 'vegetables',
+      size: product.size || '',
       image: product.image || '',
       stock: String(product.stock ?? 0),
     });
@@ -266,6 +270,7 @@ const AdminDashboard = () => {
 
     const payload = {
       ...form,
+      size: form.size.trim(),
       price: Number(form.price),
       discountPrice: form.discountPrice === '' ? null : Number(form.discountPrice),
       stock: Number(form.stock),
@@ -401,7 +406,7 @@ const AdminDashboard = () => {
                     <p>{order.user?.name || order.shippingDetails?.name || 'Customer'}</p>
                   </div>
                   <div className="admin-insight-meta">
-                    <span className="admin-order-status-chip">{order.status || 'pending'}</span>
+                    <OrderStatusBadge status={order.status} />
                     <strong>{formatCurrency(order.totalPrice ?? order.totalAmount)}</strong>
                   </div>
                 </article>
@@ -481,6 +486,16 @@ const AdminDashboard = () => {
               </div>
             </div>
 
+            <label htmlFor="size">Product Size / Quantity</label>
+            <input
+              id="size"
+              name="size"
+              type="text"
+              value={form.size}
+              onChange={handleChange}
+              placeholder="e.g. 500ml, 1kg, 12 pcs"
+            />
+
             <label htmlFor="image">Image URL</label>
             <input id="image" name="image" type="url" value={form.image} onChange={handleChange} placeholder="https://..." />
 
@@ -557,6 +572,7 @@ const AdminDashboard = () => {
 
           <div className="admin-product-list">
             {filteredProducts.map((product) => {
+              const productUnit = getProductUnit(product);
               const hasDiscount = product.discountPrice !== null && product.discountPrice !== undefined && Number(product.discountPrice) > 0;
               const stockCount = Number(product.stock ?? 0);
               const isLowStock = stockCount < 20;
@@ -575,6 +591,7 @@ const AdminDashboard = () => {
                     <p>
                       Price: Rs. {Number(product.price || 0).toFixed(2)}
                       {hasDiscount ? ` | Discount: Rs. ${Number(product.discountPrice).toFixed(2)}` : ''}
+                      {productUnit ? ` | ${productUnit}` : ''}
                       {' | '}
                       <span className={isLowStock ? 'admin-low-stock-text' : ''}>
                         Stock: {stockCount}

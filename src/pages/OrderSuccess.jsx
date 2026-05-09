@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { getProductUnit } from '../productUnit';
 
 const formatDate = (value) => {
   if (!value) {
@@ -37,7 +38,13 @@ const OrderSuccess = () => {
           <ul className="order-items">
             {order.items.map((item, index) => (
               <li key={`${order._id || 'order'}-${index}`}>
-                {(item.product && item.product.name) || item.name || 'Product'} x {item.quantity} - Rs. {item.price * item.quantity}
+                <span className="order-item-name">
+                  {(item.product && item.product.name) || item.name || 'Product'}
+                </span>
+                {getProductUnit(item) ? (
+                  <span className="product-size-inline order-item-size">{getProductUnit(item)}</span>
+                ) : null}
+                {' '}x {item.quantity} - Rs. {item.price * item.quantity}
               </li>
             ))}
           </ul>

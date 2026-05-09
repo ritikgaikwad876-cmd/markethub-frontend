@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { fetchProductById } from '../api/productApi';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { getProductUnit } from '../productUnit';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -16,6 +17,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [adding, setAdding] = useState(false);
+  const productUnit = getProductUnit(product);
 
   useEffect(() => {
     // Fetch selected product details using route param id.
@@ -74,7 +76,10 @@ const ProductDetails = () => {
       <div className="details-content">
         <h2>{product.name}</h2>
         <p className="product-category">Category: {product.category}</p>
-        <p className="product-price">Rs. {product.price}</p>
+        <p className="product-price">
+          Rs. {product.price}
+          {productUnit ? <span className="product-price-unit"> | {productUnit}</span> : null}
+        </p>
         <p className="details-description">{product.description}</p>
         <p className="details-stock">Stock: {product.stock}</p>
 

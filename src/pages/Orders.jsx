@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchMyOrders } from '../api/orderApi';
+import OrderStatusBadge from '../components/OrderStatusBadge';
+import OrderTimeline from '../components/OrderTimeline';
 import { useAuth } from '../context/AuthContext';
+import { getProductUnit } from '../productUnit';
 
 const Orders = () => {
   const { isAuthenticated } = useAuth();
@@ -51,7 +54,7 @@ const Orders = () => {
             <article key={order._id} className="order-card">
               <div className="order-head">
                 <h3>Order #{order._id.slice(-6).toUpperCase()}</h3>
-                <span className="order-status">{order.status}</span>
+                <OrderStatusBadge status={order.status} />
               </div>
 
               <p className="order-meta">Placed on: {new Date(order.createdAt).toLocaleString()}</p>
@@ -60,10 +63,18 @@ const Orders = () => {
               <p className="order-meta">Address: {order.shippingDetails?.address || order.shippingAddress}</p>
               <p className="order-meta">Payment: {order.paymentMethod}</p>
 
+              <OrderTimeline status={order.status} />
+
               <ul className="order-items">
                 {order.items.map((item, index) => (
                   <li key={`${order._id}-${index}`}>
-                    {(item.product && item.product.name) || 'Product'} x {item.quantity} - Rs. {item.price * item.quantity}
+                    <span className="order-item-name">
+                      {(item.product && item.product.name) || 'Product'}
+                    </span>
+                    {getProductUnit(item) ? (
+                      <span className="product-size-inline order-item-size">{getProductUnit(item)}</span>
+                    ) : null}
+                    {' '}x {item.quantity} - Rs. {item.price * item.quantity}
                   </li>
                 ))}
               </ul>
