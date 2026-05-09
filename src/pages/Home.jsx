@@ -21,7 +21,7 @@ const Home = () => {
       try {
         setLoadingFeatured(true);
         const products = await fetchProducts();
-        setFeaturedProducts((products || []).slice(0, 6));
+        setFeaturedProducts((products || []).slice(0, 12));
       } catch (error) {
         setFeaturedError('Unable to load featured products right now.');
       } finally {
@@ -110,7 +110,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section>
+      <section className="featured-section">
         <h2 className="section-title">Featured Products</h2>
 
         {loadingFeatured ? (
@@ -120,7 +120,7 @@ const Home = () => {
         ) : featuredProducts.length === 0 ? (
           <p className="status-msg">No featured products available.</p>
         ) : (
-          <div className="product-grid">
+          <div className="product-grid featured-product-grid">
             {featuredProducts.map((product) => (
               <ProductCard
                 key={product._id}
